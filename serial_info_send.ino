@@ -1,5 +1,5 @@
-#define numberOfBytes 4
-boolean isConnected = true;
+#define numberOfBytes 5
+boolean isConnected = false;
 
 void setup(){
   Serial.begin(9600);
@@ -11,25 +11,24 @@ void setup(){
 
 #define numberOfBytes 4
 void loop(){
-  /*
-  char salutation[numberOfBytes];
-  
-  while((Serial.available() > numberOfBytes) && !isConnected) {
-    Serial.print("inside the initial while loop peek returns: ");
-    Serial.println(Serial.peek());
     
-    if (Serial.peek() == 0) { //send a 0 before your string as a start byte      
-      Serial.read();
-      for (byte i = 0; i < numberOfBytes; i++) {
-        salutation[i] = Serial.read();
-      }
-      if (salutation == "hello") {
+  String content = "";
+  char character;
+  
+  while(Serial.available() && !isConnected) {
+      character = Serial.read();
+      content.concat(character);
+    
+      if (content == "hello") {
         isConnected = true;
-        Serial.println("Hello! I found you!");
+        Serial.println("Found you!");
       }
-    }
   }
-  */
+  
+  if (content != "") {
+    Serial.println(content);
+  }
+  
   
   if(isConnected) {
     
@@ -43,18 +42,15 @@ void loop(){
     String inputB = String(random(20,200));
     String inputC = String(random(0, 100));
     
-    String jsonString = "{ 'input1': }";
-    
-    String closingTag = ",";
-    
     String serialString = "{\"input 1\" :" + inputA + ",";
     serialString += " \"input 2\" : " + inputB + ",";
     serialString += "\"input 3\" : " + inputC + "}";
     
     Serial.println(serialString);
-    
+    //30 second cycle if a connection is detected.
+    delay(30000);
   }
   
-  //30 second delay
-  delay(60000);  
+  //2 second delay if arduino connection not deteted.
+  delay(2000);  
 }
